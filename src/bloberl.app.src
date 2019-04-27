@@ -1,0 +1,17 @@
+{application, bloberl,
+ [{description, "Loggging shipping to S3 and Azure Blob"},
+  {vsn, "1.0.0"},
+  {registered, [bloberl_sup]},
+  {mod, {bloberl_app, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    erlcloud,
+    erlazure
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {licenses, ["Apache 2.0"]},
+  {links, []}
+ ]}.

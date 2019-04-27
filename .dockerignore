@@ -1,0 +1,9 @@
+_build
+apps
+LICENSE
+README.md
+rebar.lock
+
+# local
+vars
+.vscode
