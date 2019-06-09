@@ -22,7 +22,7 @@ docker build . -t bloberl:latest
 ```
 Now let's start a container from that image that ships logs to Azure Blob Storage
 ```
-docker run --rm \
+docker run --init --rm \
 	-e "AZURE_STORAGE_ACCOUNT=my-bloberl-account" \
 	-e "AZURE_BLOB_CONTAINER=my-bloberl-container" \
 	-e 'AZURE_BLOB_STORAGE_KEY=ABCDEFGHabcdefghABCDEFGHabcdefghABCDEFGHabcdefghABCDEFGHabcdefghABCDEFGHabcdefghABCDEF==' \
@@ -31,7 +31,7 @@ docker run --rm \
 As you can see we're using env variables to define Azure's account and container (AZURE_STORAGE_ACCOUNT and AZURE_BLOB_CONTAINER) and also Azure's secret key (AZURE_BLOB_STORAGE_KEY). We're also exposing bloberl tcp listener on 0.0.0.0:31090.  
 Let's see a S3 example
 ```
-docker run --rm \
+docker run --init --rm \
 	-e "AWS_ACCESS_KEY_ID=ABCDEFGHABCDEFGHABCD" \
 	-e "AWS_SECRET_ACCESS_KEY=ABCDEFGHabcdefghABCDEFGHabcdefghABCDEFGH" \
 	-e "AWS_DEFAULT_REGION=eu-west-1" \
@@ -41,7 +41,7 @@ docker run --rm \
 In this case we're using AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY as the AWS S3 credentials and AWS_DEFAULT_REGION as the region where our bucket is and AWS_S3_BUCKET to define the bucket name
 For both AWS S3 and Azure Blob, as you can imagine, simply add both services correspondent env vars as
 ```
-docker run --rm \
+docker run --init --rm \
 	-e "AZURE_STORAGE_ACCOUNT=my-bloberl-account" \
 	-e "AZURE_BLOB_CONTAINER=my-bloberl-container" \
 	-e 'AZURE_BLOB_STORAGE_KEY=ABCDEFGHabcdefghABCDEFGHabcdefghABCDEFGHabcdefghABCDEFGHabcdefghABCDEFGHabcdefghABCDEF==' \
@@ -85,7 +85,7 @@ Assuming bloberl is running and listening on 0.0.0.0:31090 (irrespective of it b
 - *nix is awesome, cat, netcat and logrotate are cool great tools - you can always configure a specific log file to be dumped to bloberl on pre-rotation:
 ```
 prerotate
-    cat $1 | nc -C localhost 31090
+    cat $1 | nc -CN localhost 31090
 ```
 - docker logging driver `syslog` works with bloberl out of the box so you can have any container logging to bloberl like this:
 ```

@@ -25,7 +25,7 @@ RUN rebar3 as prod release
 # Build stage 1
 FROM alpine
 
-RUN addgroup -S bloberl && adduser -S -g bloberl bloberl
+RUN addgroup -S -g 10101 bloberl && adduser -S -D -u 10101 -g bloberl bloberl
 
 # Install some libs
 RUN apk add --no-cache openssl ncurses-libs && \
@@ -37,10 +37,6 @@ COPY --from=0 /buildroot/bloberl/_build/prod/rel/bloberl /bloberl
 # Expose relevant ports
 EXPOSE 31090
 
-USER bloberl
-
-COPY docker-entrypoint.sh /usr/local/bin/
-
-ENTRYPOINT ["docker-entrypoint.sh"]
+USER 10101
 
 CMD ["/bloberl/bin/bloberl", "foreground"]
