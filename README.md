@@ -51,7 +51,21 @@ docker run --init --rm \
 	-e "AWS_S3_BUCKET=my-blob-logs" \
 	-d --name bloberl -p 31090:31090 bloberl:latest
 ```
-If you do not provide either AWS_ACCESS_KEY_ID for S3 or AZURE_STORAGE_ACCOUNT for Azure Blob bloberl will simply exit on start. To run bloberl natively the same requirements apply regading environment variables existance.
+Here's an example for AWS S3 and Google Cloud Storage
+```
+docker run --init --rm \
+	-e "AWS_ACCESS_KEY_ID=ABCDEFGHABCDEFGHABCD" \
+	-e "AWS_SECRET_ACCESS_KEY=ABCDEFGHabcdefghABCDEFGHabcdefghABCDEFGH" \
+	-e "AWS_DEFAULT_REGION=eu-west-1" \
+	-e "AWS_S3_BUCKET=my-blob-logs" \
+	-e "GOOGLE_CLOUD_CREDENTIALS=/bloberl/google_key.json" \
+	-e "GOOGLE_CLOUD_BUCKET=bloberl-bucket" \
+	-v /path/to/your/google/cloud/service/account/credentials.json:/bloberl/google_key.json \
+	-d --name bloberl -p 31090:31090 bloberl:latest
+```
+Note that in this case - and specifically for Google Cloud - we're mapping a Google Cloud service account keys' json file ([more info here on creating and managing Google Cloud's service account keys](https://cloud.google.com/iam/docs/creating-managing-service-account-keys)) to /bloberl/google_key.json
+
+If you do not provide one of either AWS_ACCESS_KEY_ID for S3, AZURE_STORAGE_ACCOUNT for Azure Blob or GOOGLE_CLOUD_CREDENTIALS for Google Cloud Storage, bloberl will simply exit on start. To run bloberl natively the same requirements apply regarding environment variables existance.
 
 
 Environment variables
@@ -65,6 +79,8 @@ Environment variables
 | AZURE_STORAGE_ACCOUNT  | Microsoft Azure storage account name                                                                                     |
 | AZURE_BLOB_CONTAINER   | Microsoft Azure blob storage container name                                                                              |
 | AZURE_BLOB_STORAGE_KEY | Microsoft Azure blob storage key credential                                                                              |
+| GOOGLE_CLOUD_CREDENTIALS | Path to Google Cloud's service account keys json file                                                                  |
+| GOOGLE_CLOUD_BUCKET    | Google Cloud Storage bucket name                                                                                         |
 | PORT                   | bloberl internal tcp listening port (default is 31090)                                                                   |
 | TCP_CLIENT_TIMEOUT     | the amount of time bloberl waits for additional data before disconnecting a client (default is 5000 - in milliseconds)   |
 | MAX_RECORDS_PER_TABLE  | bloberl stores data in erlang ets tables - this establishes a max number before closing and shipping one of those tables |
@@ -102,7 +118,7 @@ Roadmap
 - [ ] better / full comments on the code
 - [ ] better exception / error handling 
 - [ ] better / more complete internal application logging
-- [ ] add more storage providers (Google Cloud Storage, Minio, etc)
+- [ ] add more storage providers (Minio, others?)
 
 
 Out of scope but very interesting nonetheless when it comes to cost savvy tech
@@ -127,5 +143,3 @@ Let's search the logs then and, as an example, let's find occurences of `PyMongo
 ```
 In a nutshell, I'm using the prefix `155636` to select all files `--prefix $2` (this will cover the time range between 2019-04-27 11:13:20 UTC and 2019-04-27 13:43:20 UTC), cycle through each and apply zcat on it to stdout. Since I'm adding `| grep -i PyMongo` I'll get the lines where PyMongo is found in those logfiles.  
 More: append `| wc -l` to the command as in `./s3zcat my-bloberl-bucket 155636 | grep -i PyMongo | wc -l` and we'll get the number of times that the text `PyMongo` showed up in our logs - gotta love *nix!
-
-

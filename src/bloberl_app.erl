@@ -45,12 +45,21 @@ start(_StartType, _StartArgs) ->
             register(erlazure, Pid)
     end,
 
+    %%====================================================================
+    %% GOOGLE CLOUD
+    %%====================================================================
+    set_env(os:getenv("GOOGLE_CLOUD_CREDENTIALS"), enenra, google_cloud_credentials, undefined),
+    set_env(os:getenv("GOOGLE_CLOUD_BUCKET"), enenra, google_cloud_bucket, undefined),
+    application:ensure_all_started(enenra),
+
+
     case {proplists:get_value(account, application:get_all_env(erlazure)),
-            proplists:get_value(aws_access_key_id, application:get_all_env(erlcloud))} of
-                {undefined, undefined} ->
-                    ?LOG_NOTICE("none of aws S3 or azure blob is defined - shutting down", []),
+            proplists:get_value(aws_access_key_id, application:get_all_env(erlcloud)),
+            proplists:get_value(google_cloud_credentials, application:get_all_env(enenra))} of
+                {undefined, undefined, undefined} ->
+                    ?LOG_ERROR("none of aws S3 or Azure Blob or GCS is defined - shutting down", []),
                     init:stop(0);
-                {_, _} ->
+                {_, _, _} ->
                     continue
     end,
 

@@ -30,3 +30,4 @@ src/r3_safe_erl_term.erl
 
 # local
 vars
+*.json

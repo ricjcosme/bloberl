@@ -7,7 +7,7 @@ ADD https://s3.amazonaws.com/rebar3/rebar3 /buildroot/rebar3/bin/rebar3
 RUN chmod a+x /buildroot/rebar3/bin/rebar3
 
 # Install git
-RUN apk add --no-cache git
+RUN apk add --no-cache git build-base
 
 # Setup Environment
 ENV PATH=/buildroot/rebar3/bin:$PATH
@@ -28,7 +28,7 @@ FROM alpine
 RUN addgroup -S -g 10101 bloberl && adduser -S -D -u 10101 -g bloberl bloberl
 
 # Install some libs
-RUN apk add --no-cache openssl ncurses-libs && \
+RUN apk add --no-cache openssl ncurses-libs libstdc++ && \
     rm -rf /tmp/* /var/tmp/*
 
 # Install the released application
