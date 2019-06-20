@@ -23,7 +23,7 @@ WORKDIR bloberl
 RUN rebar3 as prod release
 
 # Build stage 1
-FROM alpine
+FROM alpine:3.9
 
 RUN addgroup -S -g 10101 bloberl && adduser -S -D -u 10101 -g bloberl bloberl
 
