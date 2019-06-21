@@ -74,7 +74,7 @@ closed_tables() ->
     [L || L <- [string:find(atom_to_list(X),"closed_t_") || X <- ets:all(), is_atom(X)], L /= nomatch].
 
 fire_it_up(TabName) ->
-    L = [X || {_, X} <- ets:lookup(TabName, m)],
+    L = [X || {_, X} <- ets:take(TabName, m)],
     CData = zlib:gzip(L),
     gen_server:cast(whereis(bloberl_upload_server), {table, CData}),
     ets:delete(TabName).

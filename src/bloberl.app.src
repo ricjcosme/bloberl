@@ -1,6 +1,6 @@
 {application, bloberl,
- [{description, "Loggging shipping to S3 and Azure Blob"},
-  {vsn, "1.0.0"},
+ [{description, "Log shipping to S3, Google Cloud Storage and Azure Blob"},
+  {vsn, "1.0.1"},
   {registered, [bloberl_sup]},
   {mod, {bloberl_app, []}},
   {applications,

@@ -11,7 +11,10 @@
         terminate/2, 
         code_change/3]).
 
--export([aws_s3/2,azure_blob/2,google_cloud_storage/2]).
+-export([providers_caller/2,
+        aws_s3/2,
+        azure_blob/2,
+        google_cloud_storage/2]).
 
 -include_lib("kernel/include/logger.hrl").
 -include_lib("enenra/include/enenra.hrl").
@@ -40,9 +43,7 @@ handle_call(_Request, _From, State) ->
 
 handle_cast({table, L}, State) ->
     F = integer_to_list(os:system_time(nanosecond)) ++ ".gz",
-    spawn(?MODULE, aws_s3, [L,F]),
-    spawn(?MODULE, azure_blob, [L,F]),
-    spawn(?MODULE, google_cloud_storage, [L,F]),
+    spawn(?MODULE, providers_caller, [L,F]),
     Return = {noreply, State},
     Return;
 handle_cast(_Msg, State) ->
@@ -61,6 +62,11 @@ terminate(_Reason, _State) ->
 code_change(_OldVsn, State, _Extra) ->
     Return = {ok, State},
     Return.
+
+providers_caller(L, F) ->
+    aws_s3(L, F),
+    azure_blob(L, F),
+    google_cloud_storage(L, F).                
 
 aws_s3(L, F) ->
     case proplists:get_value(aws_access_key_id, application:get_all_env(erlcloud)) of

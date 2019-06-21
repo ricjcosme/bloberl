@@ -55,7 +55,7 @@ write_message(To, Message, RetriesLeft, RetryDelayMs, MaxRetryDelayMs) ->
    end.
 
 insert(To, Message) ->
-      ets:insert(To, {m, Message}).
+      ets:insert(To, {m,Message}).
 
 delete(Tab) ->
    ets:delete(Tab).
