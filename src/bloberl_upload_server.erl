@@ -64,9 +64,9 @@ code_change(_OldVsn, State, _Extra) ->
     Return.
 
 providers_caller(L, F) ->
-    aws_s3(L, F),
-    azure_blob(L, F),
-    google_cloud_storage(L, F).                
+    spawn(?MODULE, aws_s3, [L, F]),
+    spawn(?MODULE, azure_blob, [L, F]),
+    spawn(?MODULE, google_cloud_storage, [L, F]).
 
 aws_s3(L, F) ->
     case proplists:get_value(aws_access_key_id, application:get_all_env(erlcloud)) of

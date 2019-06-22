@@ -27,6 +27,11 @@ FROM alpine:3.9
 
 RUN addgroup -S -g 10101 bloberl && adduser -S -D -u 10101 -g bloberl bloberl
 
+# Erlang cookie
+RUN echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1) > /home/bloberl/.erlang.cookie && \
+    chown bloberl:bloberl /home/bloberl/.erlang.cookie && \
+    chmod 400 /home/bloberl/.erlang.cookie
+
 # Install some libs
 RUN apk add --no-cache openssl ncurses-libs libstdc++ && \
     rm -rf /tmp/* /var/tmp/*
