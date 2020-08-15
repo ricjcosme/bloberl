@@ -1,5 +1,5 @@
 # Build stage 0
-FROM erlang:22-alpine
+FROM erlang:alpine
 
 # Install Rebar3
 RUN mkdir -p /buildroot/rebar3/bin
