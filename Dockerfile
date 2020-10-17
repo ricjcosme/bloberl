@@ -3,7 +3,7 @@ FROM erlang:alpine
 
 # Install Rebar3
 RUN mkdir -p /buildroot/rebar3/bin
-ADD https://s3.amazonaws.com/rebar3/rebar3 /buildroot/rebar3/bin/rebar3
+ADD https://github.com/erlang/rebar3/releases/download/3.13.2/rebar3 /buildroot/rebar3/bin/rebar3
 RUN chmod a+x /buildroot/rebar3/bin/rebar3
 
 # Install git
